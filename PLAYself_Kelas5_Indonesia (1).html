@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLAYself – Instrumen Physical Literacy Kelas V SD</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #1a1a2e; min-height: 100vh; }
+
+  .top-bar { background: linear-gradient(135deg, #2d6a4f, #40916c); color: white; text-align: center; padding: 1.5rem 1rem; }
+  .top-bar .icons { font-size: 2rem; margin-bottom: 0.5rem; letter-spacing: 4px; }
+  .top-bar h1 { font-size: 2rem; font-weight: 700; letter-spacing: 2px; }
+  .top-bar p { font-size: 1rem; opacity: 0.9; margin-top: 0.3rem; }
+  .top-bar .sub { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 0.85rem; margin-top: 0.5rem; }
+
+  .main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  .card { background: white; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+
+  .card h2 { font-size: 1rem; font-weight: 600; color: #2d6a4f; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+
+  .identity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .identity-grid label { font-size: 0.85rem; color: #555; display: block; margin-bottom: 4px; }
+  .identity-grid input, .identity-grid select {
+    width: 100%; padding: 9px 12px; border: 1.5px solid #d1e8dc; border-radius: 10px;
+    font-size: 0.95rem; color: #1a1a2e; background: #f8fffe; outline: none;
+    transition: border-color 0.2s;
+  }
+  .identity-grid input:focus, .identity-grid select:focus { border-color: #40916c; }
+
+  .petunjuk-box { background: #e8f5e9; border-left: 4px solid #40916c; border-radius: 0 10px 10px 0; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .petunjuk-box p { font-size: 0.9rem; color: #2d6a4f; line-height: 1.7; }
+
+  .skala-legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.2rem; }
+  .skala-item { text-align: center; background: #f8fffe; border: 1.5px solid #d1e8dc; border-radius: 12px; padding: 10px 6px; }
+  .skala-item .emoji { font-size: 1.6rem; display: block; }
+  .skala-item .angka { font-size: 1rem; font-weight: 700; color: #2d6a4f; display: block; }
+  .skala-item .label { font-size: 0.75rem; color: #555; display: block; margin-top: 2px; line-height: 1.3; }
+
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 2px solid #e8f5e9; }
+  .section-header .icon { font-size: 1.5rem; }
+  .section-header h3 { font-size: 1.05rem; font-weight: 600; color: #1a1a2e; }
+  .section-header p { font-size: 0.82rem; color: #666; margin-top: 2px; }
+
+  .q-item { border: 1.5px solid #e8f5e9; border-radius: 14px; padding: 1rem; margin-bottom: 1rem; transition: border-color 0.2s; }
+  .q-item:hover { border-color: #40916c; }
+  .q-item.answered { border-color: #40916c; background: #f8fffe; }
+
+  .q-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 0.8rem; }
+  .q-num { background: #2d6a4f; color: white; border-radius: 8px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .q-num.reverse { background: #e76f51; }
+  .q-text { font-size: 0.95rem; line-height: 1.6; color: #1a1a2e; }
+  .q-text em { font-style: normal; font-weight: 700; color: #2d6a4f; }
+  .q-badge { display: inline-block; font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; margin-left: 6px; vertical-align: middle; }
+  .badge-afektif { background: #fce4ec; color: #c62828; }
+  .badge-kognitif { background: #e3f2fd; color: #1565c0; }
+  .badge-motorik { background: #e8f5e9; color: #2e7d32; }
+  .badge-lingkungan { background: #fff3e0; color: #e65100; }
+  .badge-reverse { background: #fce4ec; color: #c62828; font-style: italic; }
+
+  .q-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .q-option { position: relative; }
+  .q-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+  .q-option label {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 10px 4px; border: 1.5px solid #d1e8dc; border-radius: 12px; cursor: pointer;
+    transition: all 0.2s; background: white; text-align: center;
+  }
+  .q-option label .opt-emoji { font-size: 1.5rem; }
+  .q-option label .opt-angka { font-size: 0.8rem; font-weight: 700; color: #888; margin-top: 3px; }
+  .q-option label .opt-label { font-size: 0.68rem; color: #888; margin-top: 2px; line-height: 1.2; }
+  .q-option input:checked + label { border-color: #40916c; background: #e8f5e9; }
+  .q-option input:checked + label .opt-angka { color: #2d6a4f; }
+  .q-option input:checked + label .opt-label { color: #2d6a4f; }
+
+  .progress-bar-wrap { background: #e8f5e9; border-radius: 20px; height: 8px; margin-bottom: 0.5rem; overflow: hidden; }
+  .progress-bar { background: linear-gradient(90deg, #40916c, #2d6a4f); height: 100%; border-radius: 20px; transition: width 0.4s ease; width: 0%; }
+  .progress-text { font-size: 0.8rem; color: #555; text-align: right; }
+
+  .btn-hitung {
+    width: 100%; padding: 14px; background: linear-gradient(135deg, #2d6a4f, #40916c);
+    color: white; border: none; border-radius: 14px; font-size: 1.05rem; font-weight: 600;
+    cursor: pointer; margin-top: 0.5rem; transition: opacity 0.2s; letter-spacing: 0.5px;
+  }
+  .btn-hitung:hover { opacity: 0.88; }
+  .btn-hitung:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .result-section { display: none; }
+  .result-header { text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #2d6a4f, #40916c); border-radius: 16px 16px 0 0; color: white; margin: -1.5rem -1.5rem 1.5rem; }
+  .result-header h3 { font-size: 1.2rem; font-weight: 600; }
+  .result-name { font-size: 1rem; opacity: 0.9; margin-top: 4px; }
+
+  .score-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.2rem; }
+  .score-box { text-align: center; padding: 1rem; border-radius: 14px; border: 1.5px solid; }
+  .score-box .s-label { font-size: 0.78rem; margin-bottom: 6px; font-weight: 500; }
+  .score-box .s-val { font-size: 1.8rem; font-weight: 700; }
+  .score-box .s-max { font-size: 0.78rem; opacity: 0.7; }
+  .score-box .s-kat { display: inline-block; font-size: 0.72rem; padding: 2px 10px; border-radius: 20px; margin-top: 6px; font-weight: 600; }
+
+  .box-dim1 { background: #fff3e0; border-color: #ffb74d; color: #e65100; }
+  .box-dim1 .s-kat { background: #e65100; color: white; }
+  .box-dim2 { background: #e3f2fd; border-color: #64b5f6; color: #1565c0; }
+  .box-dim2 .s-kat { background: #1565c0; color: white; }
+
+  .box-total { background: linear-gradient(135deg, #e8f5e9, #f1f8e9); border: 2px solid #40916c; border-radius: 14px; padding: 1.2rem; text-align: center; margin-bottom: 1.2rem; }
+  .box-total .t-label { font-size: 0.85rem; color: #2d6a4f; font-weight: 500; }
+  .box-total .t-val { font-size: 2.5rem; font-weight: 700; color: #2d6a4f; }
+  .box-total .t-kat { display: inline-block; font-size: 0.9rem; padding: 4px 18px; border-radius: 20px; margin-top: 8px; font-weight: 600; color: white; }
+
+  .kat-sangat-tinggi { background: #1b5e20; }
+  .kat-tinggi { background: #2d6a4f; }
+  .kat-cukup { background: #f57c00; }
+  .kat-rendah { background: #c62828; }
+
+  .interp-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 1rem; }
+  .interp-table th { background: #e8f5e9; color: #2d6a4f; padding: 8px 12px; text-align: left; }
+  .interp-table td { padding: 8px 12px; border-bottom: 1px solid #e8f5e9; }
+  .interp-table tr.highlighted td { background: #fffde7; font-weight: 600; }
+
+  .btn-reset { width: 100%; padding: 11px; background: white; color: #2d6a4f; border: 1.5px solid #40916c; border-radius: 14px; font-size: 0.95rem; font-weight: 500; cursor: pointer; margin-top: 1rem; transition: background 0.2s; }
+  .btn-reset:hover { background: #e8f5e9; }
+
+  .source-note { font-size: 0.75rem; color: #888; text-align: center; margin-top: 1.5rem; line-height: 1.7; }
+
+  @media (max-width: 480px) {
+    .identity-grid { grid-template-columns: 1fr; }
+    .skala-legend { grid-template-columns: repeat(2, 1fr); }
+    .q-options { grid-template-columns: repeat(4, 1fr); }
+    .score-grid { grid-template-columns: 1fr; }
+    .q-option label { padding: 8px 2px; }
+    .q-option label .opt-emoji { font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="icons">🏃‍♂️⚽🏊‍♀️🤸‍♂️</div>
+  <h1>PLAYself</h1>
+  <p>Instrumen Penilaian Diri Literasi Fisik Siswa</p>
+  <span class="sub">📚 Kelas V SD &nbsp;·&nbsp; PJOK</span>
+</div>
+
+<div class="main">
+
+  <!-- IDENTITAS -->
+  <div class="card">
+    <h2>👤 Data Diri Siswa</h2>
+    <div class="identity-grid">
+      <div>
+        <label>Nama Lengkap</label>
+        <input type="text" id="nama" placeholder="Tulis namamu di sini...">
+      </div>
+      <div>
+        <label>Kelas / Rombel</label>
+        <input type="text" id="kelas" placeholder="Contoh: V A">
+      </div>
+      <div>
+        <label>Tanggal Pengisian</label>
+        <input type="date" id="tanggal">
+      </div>
+      <div>
+        <label>Jenis Kelamin</label>
+        <select id="gender">
+          <option value="">-- Pilih --</option>
+          <option value="L">Laki-laki</option>
+          <option value="P">Perempuan</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- PETUNJUK -->
+  <div class="card">
+    <h2>💡 Petunjuk Pengisian</h2>
+    <div class="petunjuk-box">
+      <p>Bacalah setiap pernyataan dengan seksama. Pilih <strong>satu</strong> wajah yang paling menggambarkan dirimu. Tidak ada jawaban benar atau salah — jawablah sesuai keadaanmu yang sebenarnya! 😊</p>
+    </div>
+    <div class="skala-legend">
+      <div class="skala-item">
+        <span class="emoji">😁</span>
+        <span class="angka">4</span>
+        <span class="label">Sangat Bisa</span>
+      </div>
+      <div class="skala-item">
+        <span class="emoji">🙂</span>
+        <span class="angka">3</span>
+        <span class="label">Bisa</span>
+      </div>
+      <div class="skala-item">
+        <span class="emoji">😐</span>
+        <span class="angka">2</span>
+        <span class="label">Kurang Bisa</span>
+      </div>
+      <div class="skala-item">
+        <span class="emoji">😞</span>
+        <span class="angka">1</span>
+        <span class="label">Belum Pernah<br>Mencoba</span>
+      </div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="progress-text" id="progress-text">0 dari 16 pertanyaan dijawab</div>
+  </div>
+
+  <!-- DIMENSI 1 -->
+  <div class="card">
+    <div class="section-header">
+      <div class="icon">🌍</div>
+      <div>
+        <h3>Dimensi 1: Kompetensi Lingkungan Gerak</h3>
+        <p>Seberapa baik kamu beraktivitas di berbagai tempat?</p>
+      </div>
+    </div>
+    <div id="dim1-questions"></div>
+  </div>
+
+  <!-- DIMENSI 2 -->
+  <div class="card">
+    <div class="section-header">
+      <div class="icon">💭</div>
+      <div>
+        <h3>Dimensi 2: Deskripsi Diri Literasi Fisik</h3>
+        <p>Bagaimana perasaan & pikiranmu tentang aktivitas fisik?</p>
+      </div>
+    </div>
+    <div id="dim2-questions"></div>
+  </div>
+
+  <!-- TOMBOL HITUNG -->
+  <div class="card">
+    <button class="btn-hitung" id="btn-hitung" onclick="hitungSkor()">🧮 Hitung Skor Otomatis</button>
+  </div>
+
+  <!-- HASIL -->
+  <div class="card result-section" id="result-section">
+    <div class="result-header">
+      <h3>📊 Hasil Skor Physical Literacy</h3>
+      <div class="result-name" id="result-name">—</div>
+    </div>
+
+    <div class="score-grid">
+      <div class="score-box box-dim1">
+        <div class="s-label">🌍 Dimensi 1 — Lingkungan Gerak</div>
+        <div class="s-val" id="skor-dim1">—</div>
+        <div class="s-max">dari 24</div>
+        <div class="s-kat" id="kat-dim1">—</div>
+      </div>
+      <div class="score-box box-dim2">
+        <div class="s-label">💭 Dimensi 2 — Deskripsi Diri</div>
+        <div class="s-val" id="skor-dim2">—</div>
+        <div class="s-max">dari 40</div>
+        <div class="s-kat" id="kat-dim2">—</div>
+      </div>
+    </div>
+
+    <div class="box-total">
+      <div class="t-label">⭐ Total Skor Physical Literacy</div>
+      <div class="t-val" id="skor-total">—</div>
+      <div style="font-size:0.8rem;color:#555;">dari 64 &nbsp;|&nbsp; <span id="persen-total">—</span>%</div>
+      <div class="t-kat" id="kat-total">—</div>
+    </div>
+
+    <p style="font-size:0.85rem;font-weight:600;color:#2d6a4f;margin-bottom:0.7rem;">📋 Panduan Interpretasi (Total Skor, maks. 64)</p>
+    <table class="interp-table" id="interp-table">
+      <thead><tr><th>Rentang Skor</th><th>Kategori</th><th>Keterangan</th></tr></thead>
+      <tbody>
+        <tr data-min="55" data-max="64"><td>55 – 64</td><td>🌟 Sangat Tinggi</td><td>Literasi fisik berkembang sangat baik</td></tr>
+        <tr data-min="43" data-max="54"><td>43 – 54</td><td>✅ Tinggi</td><td>Literasi fisik berkembang dengan baik</td></tr>
+        <tr data-min="31" data-max="42"><td>31 – 42</td><td>⚠️ Cukup</td><td>Literasi fisik perlu ditingkatkan</td></tr>
+        <tr data-min="16" data-max="30"><td>16 – 30</td><td>🔴 Rendah</td><td>Literasi fisik perlu perhatian khusus</td></tr>
+      </tbody>
+    </table>
+
+    <button class="btn-reset" onclick="resetForm()">🔄 Isi Ulang</button>
+  </div>
+
+  <div class="source-note">
+    📖 <strong>Sumber:</strong> Diadaptasi dari PLAYself (Jefferies, Bremer, Kozera, Cairney & Kriellaars, 2021)<br>
+    dengan penyesuaian konteks PJOK Kelas V SD Indonesia.<br>
+    Jefferies, P., et al. (2021). Psychometric properties and construct validity of PLAYself. <em>Applied Physiology, Nutrition, and Metabolism.</em>
+  </div>
+
+</div>
+
+<script>
+const dim1 = [
+  { id:"d1q1", text:'Saya bisa melakukan olahraga dan permainan dengan baik <em>di lapangan / halaman sekolah</em>.', badge:'lingkungan', reverse:false },
+  { id:"d1q2", text:'Saya bisa bermain dan berolahraga dengan baik <em>di dalam ruangan (gym / aula)</em>.', badge:'lingkungan', reverse:false },
+  { id:"d1q3", text:'Saya bisa melakukan aktivitas fisik dengan baik <em>di air / kolam renang</em>.', badge:'lingkungan', reverse:false },
+  { id:"d1q4", text:'Saya bisa beraktivitas fisik dengan baik <em>di alam terbuka / luar ruangan</em> (taman, sawah, pantai, dll.).', badge:'lingkungan', reverse:false },
+  { id:"d1q5", text:'Saya bisa bermain dan berolahraga dengan baik <em>di area bermain / playground</em>.', badge:'lingkungan', reverse:false },
+  { id:"d1q6", text:'Saya merasa nyaman dan percaya diri saat mencoba olahraga atau permainan <em>di tempat baru</em>.', badge:'lingkungan', reverse:false },
+];
+
+const dim2 = [
+  { id:"d2q1", text:'Saya merasa <em>senang dan bahagia</em> saat melakukan aktivitas fisik atau olahraga.', badge:'afektif', reverse:false },
+  { id:"d2q2", text:'Saya merasa <em>percaya diri</em> saat melakukan gerakan atau keterampilan olahraga.', badge:'afektif', reverse:false },
+  { id:"d2q3", text:'Saya <em>bersemangat</em> dan termotivasi untuk aktif bergerak setiap hari.', badge:'afektif', reverse:false },
+  { id:"d2q4", text:'Saya merasa <em>lebih bahagia dan lebih baik</em> setelah berolahraga atau bergerak aktif.', badge:'afektif', reverse:false },
+  { id:"d2q5", text:'Saya merasa memiliki <em>cukup kemampuan gerak</em> untuk mengikuti semua olahraga dan permainan yang saya inginkan.', badge:'kognitif', reverse:false },
+  { id:"d2q6", text:'Saya <em>memahami cara melakukan gerakan</em> dengan benar dan aman saat berolahraga.', badge:'kognitif', reverse:false },
+  { id:"d2q7", text:'Saya mengerti <em>istilah dan aturan</em> yang digunakan guru PJOK saat menjelaskan olahraga.', badge:'kognitif', reverse:false },
+  { id:"d2q8", text:'Saya tahu <em>manfaat olahraga</em> bagi kesehatan tubuh saya.', badge:'kognitif', reverse:false },
+  { id:"d2q9", text:'Saya merasa <em>malas dan tidak mau</em> bergerak aktif saat jam olahraga.', badge:'reverse', reverse:true },
+  { id:"d2q10", text:'Saya <em>mau mengajak teman</em> untuk bermain atau berolahraga bersama.', badge:'afektif', reverse:false },
+];
+
+const badgeLabel = { afektif:'Afektif', kognitif:'Kognitif', motorik:'Motorik', lingkungan:'Lingkungan', reverse:'🔄 Terbalik' };
+const badgeCls = { afektif:'badge-afektif', kognitif:'badge-kognitif', motorik:'badge-motorik', lingkungan:'badge-lingkungan', reverse:'badge-reverse' };
+const opts = [
+  { val:4, emoji:'😁', label:'Sangat Bisa' },
+  { val:3, emoji:'🙂', label:'Bisa' },
+  { val:2, emoji:'😐', label:'Kurang Bisa' },
+  { val:1, emoji:'😞', label:'Belum Pernah Mencoba' },
+];
+
+let totalAnswered = 0;
+const totalQ = dim1.length + dim2.length;
+
+function buildQ(questions, containerId, startNum) {
+  const container = document.getElementById(containerId);
+  questions.forEach((q, i) => {
+    const num = startNum + i;
+    const div = document.createElement('div');
+    div.className = 'q-item';
+    div.id = 'qitem-' + q.id;
+    let optsHtml = opts.map(o => `
+      <div class="q-option">
+        <input type="radio" name="${q.id}" id="${q.id}_${o.val}" value="${o.val}" onchange="onAnswer('${q.id}')">
+        <label for="${q.id}_${o.val}">
+          <span class="opt-emoji">${o.emoji}</span>
+          <span class="opt-angka">${o.val}${q.reverse ? '*' : ''}</span>
+          <span class="opt-label">${o.label}</span>
+        </label>
+      </div>`).join('');
+    div.innerHTML = `
+      <div class="q-header">
+        <div class="q-num${q.reverse ? ' reverse' : ''}">${num}</div>
+        <div class="q-text">${q.text}<span class="q-badge ${badgeCls[q.badge]}">${badgeLabel[q.badge]}</span></div>
+      </div>
+      <div class="q-options">${optsHtml}</div>`;
+    container.appendChild(div);
+  });
+}
+
+buildQ(dim1, 'dim1-questions', 1);
+buildQ(dim2, 'dim2-questions', dim1.length + 1);
+
+document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
+
+function onAnswer(qid) {
+  const item = document.getElementById('qitem-' + qid);
+  if (!item.classList.contains('answered')) {
+    item.classList.add('answered');
+    totalAnswered++;
+    updateProgress();
+  }
+}
+
+function updateProgress() {
+  const pct = Math.round((totalAnswered / totalQ) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = totalAnswered + ' dari ' + totalQ + ' pertanyaan dijawab';
+}
+
+function getScore(questions) {
+  let total = 0, count = 0;
+  questions.forEach(q => {
+    const el = document.querySelector(`input[name="${q.id}"]:checked`);
+    if (el) {
+      let v = parseInt(el.value);
+      if (q.reverse) v = 5 - v;
+      total += v; count++;
+    }
+  });
+  return { total, count };
+}
+
+function kategori(skor, max) {
+  const p = (skor / max) * 100;
+  if (p >= 85.9) return { label: 'Sangat Tinggi', cls: 'kat-sangat-tinggi' };
+  if (p >= 67.2) return { label: 'Tinggi', cls: 'kat-tinggi' };
+  if (p >= 48.4) return { label: 'Cukup', cls: 'kat-cukup' };
+  return { label: 'Rendah', cls: 'kat-rendah' };
+}
+
+function hitungSkor() {
+  const s1 = getScore(dim1);
+  const s2 = getScore(dim2);
+  if (s1.count < dim1.length || s2.count < dim2.length) {
+    alert('Mohon jawab semua pertanyaan terlebih dahulu ya! 😊');
+    return;
+  }
+  const nama = document.getElementById('nama').value.trim() || '—';
+  const kelas = document.getElementById('kelas').value.trim();
+  const grand = s1.total + s2.total;
+  const grandMax = dim1.length * 4 + dim2.length * 4;
+  const persen = Math.round((grand / grandMax) * 100);
+
+  document.getElementById('result-name').textContent = nama + (kelas ? ' · Kelas ' + kelas : '');
+  document.getElementById('skor-dim1').textContent = s1.total;
+  document.getElementById('skor-dim2').textContent = s2.total;
+  document.getElementById('skor-total').textContent = grand;
+  document.getElementById('persen-total').textContent = persen;
+
+  const k1 = kategori(s1.total, dim1.length * 4);
+  const k2 = kategori(s2.total, dim2.length * 4);
+  const kt = kategori(grand, grandMax);
+
+  document.getElementById('kat-dim1').textContent = k1.label;
+  document.getElementById('kat-dim2').textContent = k2.label;
+  const katTotalEl = document.getElementById('kat-total');
+  katTotalEl.textContent = kt.label;
+  katTotalEl.className = 't-kat ' + kt.cls;
+
+  const rows = document.querySelectorAll('#interp-table tbody tr');
+  rows.forEach(r => {
+    r.classList.remove('highlighted');
+    if (grand >= parseInt(r.dataset.min) && grand <= parseInt(r.dataset.max)) r.classList.add('highlighted');
+  });
+
+  const rs = document.getElementById('result-section');
+  rs.style.display = 'block';
+  rs.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetForm() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.q-item').forEach(el => el.classList.remove('answered'));
+  document.getElementById('result-section').style.display = 'none';
+  totalAnswered = 0;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
